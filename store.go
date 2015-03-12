@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/HouzuoGuo/tiedot/db"
 	"github.com/fatih/structs"
@@ -18,6 +19,7 @@ func NewStore(col *db.Col) (Store, error) {
 
 type Store struct {
 	Col *db.Col
+	sync.RWMutex
 }
 
 func (s *Store) getUidFromId(id string) (int, error) {
@@ -34,6 +36,9 @@ func (s *Store) getUidFromId(id string) (int, error) {
 }
 
 func (s *Store) One(id string) (Node, error) {
+	s.Lock()
+	defer s.Unlock()
+
 	var node Node = Node{}
 	uid, err := s.getUidFromId(id)
 	if err == nil {
@@ -50,6 +55,9 @@ func (s *Store) One(id string) (Node, error) {
 }
 
 func (s *Store) All() ([]Node, error) {
+	s.Lock()
+	defer s.Unlock()
+
 	var allNodes []Node = make([]Node, 0)
 	s.Col.ForEachDoc(func(id int, docContent []byte) (willMoveOn bool) {
 		var doc Node = Node{}
@@ -63,10 +71,13 @@ func (s *Store) All() ([]Node, error) {
 }
 
 func (s *Store) Insert(node Node) error {
+	s.Lock()
+	defer s.Unlock()
+
 	if node.ID == "" {
 		return errors.New("Missing ID")
 	}
-	_, err := s.One(node.ID)
+	_, err := s.getUidFromId(node.ID)
 	if err == nil {
 		return errors.New("Dublicate ID")
 	}
@@ -75,6 +86,9 @@ func (s *Store) Insert(node Node) error {
 }
 
 func (s *Store) Upsert(node Node) error {
+	s.Lock()
+	defer s.Unlock()
+
 	if node.ID == "" {
 		return errors.New("Missing ID")
 	}
