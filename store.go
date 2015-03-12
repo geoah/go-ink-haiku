@@ -13,10 +13,6 @@ import (
 
 func NewStore(col *db.Col) (Store, error) {
 	var store Store = Store{Col: col}
-	// TODO Check if this needs to be done on every initialization or just on DB create
-	if err := store.Col.Index([]string{"ID"}); err != nil {
-		return store, err
-	}
 	return store, nil
 }
 
