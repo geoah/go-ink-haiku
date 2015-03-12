@@ -9,11 +9,11 @@ import (
 
 var currentId int
 
-var Nodes Store
+var Nodes Store = Store{}
 var myDB db.DB
 
 func init() {
-	myDBDir := "/tmp/tiedot_test_embeddedExample"
+	myDBDir := "/tmp/tiedot_test_embeddedExample1"
 	os.RemoveAll(myDBDir)
 	defer os.RemoveAll(myDBDir)
 
@@ -25,7 +25,8 @@ func init() {
 		log.Fatal(err)
 	}
 
-	Nodes, err := NewStore(myDB.Use("Nodes"))
+	// Nodes, err := NewStore(myDB.Use("Nodes"))
+	Nodes.Col = myDB.Use("Nodes")
 	if err := Nodes.Col.Index([]string{"ID"}); err != nil {
 		panic(err)
 	}

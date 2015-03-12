@@ -12,10 +12,10 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-func NewStore(col *db.Col) (Store, error) {
-	var store Store = Store{Col: col}
-	return store, nil
-}
+// func NewStore(col *db.Col) (Store, error) {
+// 	var store Store = Store{Col: col}
+// 	return store, nil
+// }
 
 type Store struct {
 	Col *db.Col
