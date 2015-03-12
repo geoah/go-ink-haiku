@@ -36,7 +36,7 @@ func (s *Store) getUidFromId(id string) (int, error) {
 func (s *Store) One(id string) (Node, error) {
 	var node Node = Node{}
 	uid, err := s.getUidFromId(id)
-	if err != nil {
+	if err == nil {
 		docContent, err := s.Col.Read(uid)
 		if err != nil {
 			return node, err
