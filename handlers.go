@@ -16,7 +16,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func NodeIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	nodes, err := Nodes.All()
+	nodes, err := db.Nodes.All()
 	if err != nil {
 		panic(err)
 	}
@@ -28,7 +28,7 @@ func NodeIndex(w http.ResponseWriter, r *http.Request) {
 func NodeShow(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var nodeID string = vars["nodeId"]
-	node, err := Nodes.One(nodeID)
+	node, err := db.Nodes.One(nodeID)
 	if err == nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)

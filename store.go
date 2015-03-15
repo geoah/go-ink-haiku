@@ -7,18 +7,18 @@ import (
 	"log"
 	"sync"
 
-	"github.com/HouzuoGuo/tiedot/db"
+	tiedotdb "github.com/HouzuoGuo/tiedot/db"
 	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 )
 
-// func NewStore(col *db.Col) (Store, error) {
+// func NewStore(col *tiedotdb.Col) (*Store, error) {
 // 	var store Store = Store{Col: col}
-// 	return store, nil
+// 	return &store, nil
 // }
 
 type Store struct {
-	Col *db.Col
+	Col *tiedotdb.Col
 	sync.RWMutex
 }
 
@@ -26,7 +26,7 @@ func (s *Store) getUidFromId(id string) (int, error) {
 	var query interface{}
 	json.Unmarshal([]byte(fmt.Sprintf(`[{"eq": "%s", "in": ["ID"], "limit": 1}]`, id)), &query)
 	queryResult := make(map[int]struct{})
-	if err := db.EvalQuery(query, s.Col, &queryResult); err != nil {
+	if err := tiedotdb.EvalQuery(query, s.Col, &queryResult); err != nil {
 		return 0, err
 	}
 	for uid := range queryResult {
