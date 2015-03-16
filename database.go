@@ -43,15 +43,16 @@ func NewDB() DB {
 
 	var idb DB = DB{db: tdb, Nodes: nodeStore}
 
-	nodeStore.Insert(Node{
+	// Insert sample data
+	err = nodeStore.Insert(&Node{
 		ID:       "a1",
 		Hostname: "http://1",
 	})
-	nodeStore.Insert(Node{
+	nodeStore.Insert(&Node{
 		ID:       "a2",
 		Hostname: "http://xx",
 	})
-	nodeStore.Upsert(Node{
+	nodeStore.Upsert(&Node{
 		ID:       "a2",
 		Hostname: "http://2",
 	})
